@@ -21,8 +21,7 @@ public class Movement : MonoBehaviour
         _moveDirection = _cameraTransform.TransformDirection(_moveDirection);
         _moveDirection *= _speed;
         _controller.Move(_moveDirection * Time.deltaTime);
-        float _height = _controller.transform.position.y;
-        _controller.Move( new Vector3(0,-_height,0) );
+        _controller.transform.position.Set(_controller.transform.position.x,100,_controller.transform.position.z);
         
     }
 }
