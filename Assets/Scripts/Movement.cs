@@ -2,20 +2,27 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(CharacterController))]
 public class Movement : MonoBehaviour
 {
-    public float _speed = 10.0f;
+    [SerializeField] float _speed = 10.0f;
+    [SerializeField] Transform _cameraTransform ;
+    CharacterController _controller;
+    private Vector3 _moveDirection = Vector3.zero;
+    
+    void Start()
+    {
+        _controller = GetComponent<CharacterController>();
+    }
+
     void Update()
     {
-        float _translation_Z = Input.GetAxis("Vertical")   * _speed;
-        float _translation_X = Input.GetAxis("Horizontal") * _speed;
-        float _horizontal    = Input.GetAxis("Mouse X")    * _speed;
-
-        _translation_Z *= Time.deltaTime;
-        _translation_X *= Time.deltaTime;
-        _horizontal    *= Time.deltaTime;
+        _moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+        _moveDirection = _cameraTransform.TransformDirection(_moveDirection);
+        _moveDirection *= _speed;
+        _controller.Move(_moveDirection * Time.deltaTime);
+        float _height = _controller.transform.position.y;
+        _controller.Move( new Vector3(0,-_height,0) );
         
-        transform.Translate(_translation_X, 0, _translation_Z);
-        transform.Rotate(0, _horizontal, 0);
     }
 }
